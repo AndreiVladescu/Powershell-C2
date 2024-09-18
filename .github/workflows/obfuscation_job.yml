@@ -1,4 +1,4 @@
-name: Obfuscate PowerShell Files
+name: Obfuscation Job
 
 on:
   push:
@@ -13,25 +13,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 2: Set up Python environment
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.x'
 
-    # Step 3: Install any dependencies for obfuscator.py (if required)
     - name: Install dependencies
       run: pip install -r requirements.txt
 
-    # Step 4: Run the obfuscator.py script from the utilitarian folder
     - name: Run obfuscator script
       run: python utilitarian/obfuscator.py xps1.ps1 xps2.ps1
 
-    # Step 5: Upload generated files as artifacts (Optional: if you want to save them for future use)
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
