@@ -5,8 +5,7 @@ on:
     branches:
       - main
     paths:
-      - xps1.ps1
-      - xps2.ps1
+      - '**'
 
 jobs:
   obfuscate-powershell:
@@ -27,10 +26,13 @@ jobs:
     - name: Run obfuscator script
       run: python utilitarian/obfuscator.py xps1.ps1 xps2.ps1
 
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
       with:
-        name: processed-files
-        path: |
+        tag: v1.0  # Replace this with your versioning scheme or use a dynamic version
+        files: |
           obfuscated_weapons.cmd
           weapons.cmd
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatically provided by GitHub Actions
