@@ -1,4 +1,4 @@
-﻿function f0()
+function f0()
 {
     $query = "select * from win32_logicaldisk where DeviceID='C:'";
     $serialNumber = (Get-WmiObject -Query($query)).VolumeSerialNumber;
