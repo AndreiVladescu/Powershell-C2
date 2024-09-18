@@ -34,7 +34,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatically provided by GitHub Actions
       with:
-        tag_name: ${{ github.ref_name }}
+        tag_name: ${{ github.event.release.tag_name }}
         release_name: Release ${{ github.ref }}
         body: |
           C2 functionality with 3 scripts included. Can write your own commands to send to the beaconing agent.
