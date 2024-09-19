@@ -24,7 +24,8 @@ The payloads will need some obfuscation, as antivirius solutions will definitely
 
  - [PowerShell-Obfuscation-Bible](https://github.com/t3l3machus/PowerShell-Obfuscation-Bible)
  - [AMSITrigger](https://github.com/RythmStick/AMSITrigger)
+ - [Chameleon](https://github.com/klezVirus/chameleon)
  
- Things you need to do are described in Powershell Obfuscation Bible. 
+ Things you need to do are described in Powershell Obfuscation Bible.  I used Chameleon to make all the obfuscations easy.
 
 
