@@ -32,7 +32,7 @@ def generate_cmd(scripts, output_file, obfuscate_job=False):
                 try:
                     # Runs on the OS
                     os.system(f"{venv_path} {chameleon_path} {args}")
-                except:
+                finally:
                     # Runs on the workflow
                     os.system(f"{chameleon_path} {args}")
 
@@ -43,7 +43,7 @@ def generate_cmd(scripts, output_file, obfuscate_job=False):
             outfile.write(f'set {file_name}="{encoded_script}"\n')
             outfile.write(
                 f'cmd /c start /min "" %xwp0% %xwp1% %xwp2% -c (%xwp0% %xwp1% %xwp2% -enC ($env:{file_name}))\n')
-            #if obfuscate_job:
+            # if obfuscate_job:
             #    os.remove('temporary_jobby.ps1')
 
 
