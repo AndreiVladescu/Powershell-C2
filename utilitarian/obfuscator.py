@@ -53,7 +53,7 @@ def main():
         sys.exit(1)
 
     generate_cmd(sys.argv[1:], 'weapons.cmd', obfuscate_job=False)
-    generate_cmd(sys.argv[1:], 'obfuscated_weapons.cmd', obfuscate_job=True)
+    # generate_cmd(sys.argv[1:], 'obfuscated_weapons.cmd', obfuscate_job=True)
 
 
 if __name__ == "__main__":
