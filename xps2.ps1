@@ -80,6 +80,6 @@ do {
     }
 	
 	$r = f2;
-    Write-Output('_m03tsfc: ' + $r);
+    Write-Output('debug: ' + $r);
 }while ($false);
     
