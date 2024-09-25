@@ -86,7 +86,7 @@ Add-Type -AssemblyName System.Drawing
 
 # Create the form
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "Popup with Timer and Image"
+$form.Text = "Budget Friendly Ransomware"
 $form.Size = New-Object System.Drawing.Size(1600, 300)
 $form.StartPosition = "CenterScreen"
 
