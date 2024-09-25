@@ -1,6 +1,6 @@
 
 # Replace the webhook url
-$webhookUrl = 'https://webhook.site/7c90c9ef-a00f-4256-be00-51bf4287b84e'
+$webhookUrl = 'https://webhook.site/3f302b74-d7a0-4863-8d12-f39368c1e9cb'
 
 # Collect system info into variables
 $computerInfo = Get-ComputerInfo
