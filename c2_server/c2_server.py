@@ -15,15 +15,26 @@ class CustomHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == '/shrek_wallpaper':
+            # Defacement
             self.serve_file('../defacement/shrek_wallpaper.ps1')
             return
         if self.path == '/awesomeware':
+            # Ransomware
             self.serve_file('../ransomware/ransom.ps1')
             return
         if self.path == '/ratata':
+            # Exfiltration
             self.serve_file('../exfil/squeak.ps1')
             return
-
+        if self.path == '/cryptobro':
+            # Cryptominer
+            self.serve_file('../cryptominer/DummyCryptoMiner.exe')
+            return
+        if self.path == '/cryptobro':
+            # Forkbomb
+            self.serve_file('../dos/Forkbomb.exe')
+            return
+            
         log_data = ''
         # Get the current timestamp
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
